@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Site - Email Verification</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 50px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .access-granted {
+            background: rgba(76, 175, 80, 0.2);
+        }
+        .access-denied {
+            background: rgba(244, 67, 54, 0.2);
+        }
+        .status {
+            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .granted {
+            background: rgba(76, 175, 80, 0.3);
+        }
+        .denied {
+            background: rgba(244, 67, 54, 0.3);
+        }
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .hidden {
+            display: none;
+        }
+        .manual-entry {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        input[type="email"] {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            width: 300px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #3367d6;
+        }
+        button.secondary {
+            background: #5a6268;
+        }
+        button.secondary:hover {
+            background: #495056;
+        }
+        .loading-dots:after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-container">
+        <h1>📧 Email Verification Access</h1>
+        
+        <!-- Loading State -->
+        <div id="loading">
+            <div class="status">
+                🔍 Checking email authentication<span class="loading-dots"></span>
+            </div>
+            <div id="loading-steps" style="text-align: left; margin-top: 20px;">
+                <div id="step-url">• Checking URL for email link</div>
+                <div id="step-storage">• Checking previous sessions</div>
+                <div id="step-auto">• Attempting automatic detection</div>
+            </div>
+        </div>
+
+        <!-- Access Granted -->
+        <div id="access-granted" class="hidden access-granted">
+            <div class="status granted">
+                ✅ Access Granted via Email Verification
+            </div>
+            <div class="user-info">
+                <h3>Welcome, <span id="user-email"></span>!</h3>
+                <p><strong>Verification Method:</strong> <span id="auth-method"></span></p>
+                <p><strong>Access Time:</strong> <span id="access-time"></span></p>
+                <p><strong>Session:</strong> <span id="session-status"></span></p>
+            </div>
+            
+            <div class="protected-content">
+                <h2>🎉 Secure Content Area</h2>
+                <p>Your email has been verified and you now have access to protected content.</p>
+                
+                <div style="text-align: left; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4>Protected Resources</h4>
+                    <ul>
+                        <li>Company Internal Documents</li>
+                        <li>Team Collaboration Space</li>
+                        <li>Project Management Tools</li>
+                        <li>Client Information Portal</li>
+                        <li>Internal Communications</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button onclick="logout()" class="secondary">Sign Out & Clear Email</button>
+        </div>
+
+        <!-- Access Denied -->
+        <div id="access-denied" class="hidden access-denied">
+            <div class="status denied">
+                ❌ Email Verification Required
+            </div>
+            <div class="user-info">
+                <p><strong>Automatic Detection:</strong> <span id="detection-status">No email detected automatically</span></p>
+                <p>Please enter your authorized email address to continue.</p>
+            </div>
+
+            <!-- Manual Email Entry -->
+            <div class="manual-entry">
+                <h3>Enter Your Email Address</h3>
+                <p>You will be automatically verified if your email is authorized.</p>
+                <input type="email" id="manual-email" placeholder="your.email@company.com" autocomplete="email">
+                <button onclick="verifyManualEmail()">Verify Email</button>
+                <div id="manual-error" style="color: #ff6b6b; margin-top: 10px;"></div>
+                
+                <div style="margin-top: 15px; font-size: 0.9em; color: #ccc;">
+                    <p>Don't have an authorized email? <a href="mailto:admin@company.com" style="color: #4285f4;">Contact administrator</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="email-only-auth.js"></script>
+</body>
+</html>
